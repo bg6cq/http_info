@@ -9,6 +9,7 @@ usage:
           -t table_name   sql replace table_name
           -i url_file     read url from url_file
 ````
+http_info 执行 curl 去获取网站的HTTP 头信息，因此需要安装curl才可以正常使用。
 
 ## 输出可以直接插入数据库
    数据库表结构
