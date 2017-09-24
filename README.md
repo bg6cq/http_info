@@ -1,5 +1,6 @@
 #http_info 显示HTTP协议的服务器端信息
 
+````
 usage:
     http_info [ -d ] [ -w wait_time ] [ -s -t table_name ] [ -i url_file | url ]
           -d              debug
@@ -7,7 +8,7 @@ usage:
           -s              ouput sql replace into statement
           -t table_name   sql replace table_name
           -i url_file     read url from url_file
-
+````
 
 ##例子输出
 ````

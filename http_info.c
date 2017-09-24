@@ -1,3 +1,9 @@
+/* 
+ 	http_info display http server info
+
+	james@ustc.edu.cn 2017.09.24
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
