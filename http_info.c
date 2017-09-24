@@ -180,6 +180,7 @@ void http_info(char *url)
 				asp = 1;
 		}
 	}
+	pclose(fp);
 
 	if (got_res == 0) {
 		strcpy(buf, "FAIL");
