@@ -35,6 +35,8 @@ void addstr(char *buf, char *str)
 void checkstring(char *buf)
 {
 	int a, b, len = strlen(buf);
+	if (buf[0] == 0)
+		return;
 	a = b = 0;
 	while (b < len) {
 		if ((buf[b] >= 'a' && buf[b] <= 'z') ||
@@ -83,6 +85,8 @@ void http_info(char *url)
 	soft[0] = 0;
 	php = asp = java = hpprinter = h3c = lenovo = 0;
 	netgear = zhonshipcam = hkvsipcam = dlink = mssql = qnap = ipmi = pdyq = labview = 0;
+	if (debug)
+		printf("DBG: url=%s\n", url);
 	snprintf(buf, MAXLEN, "curl -k --head -m %d %s 2>/dev/null", wait_time, url);
 	fp = popen(buf, "r");
 	if (fp == NULL) {
