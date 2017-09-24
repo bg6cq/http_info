@@ -118,7 +118,7 @@ void http_info(char *url)
 			addstr(server, p);
 			if (strstr(p, "Virata-EmWeb") != 0)
 				hpprinter = 1;
-			else if (strcmp(p, "MrvlR1_00") == 0)
+			else if (strcmp(p, "Mrvl-R1_0") == 0)
 				hpprinter = 1;
 			else if (strcmp(p, "Mrvl-R2_0") == 0)
 				hpprinter = 1;
@@ -137,21 +137,21 @@ void http_info(char *url)
 					netgear = 1;
 			} else if (strcmp(p, "thttpd/2.27 19Oct2015") == 0)
 				zhonshipcam = 1;
-			else if (strcmp(p, "Hikvision-Webss") == 0)
+			else if (strcmp(p, "Hikvision-Webs") == 0)
 				hkvsipcam = 1;
-			else if (strcmp(p, "DNVRS-Webss") == 0)
+			else if (strcmp(p, "DNVRS-Webs") == 0)
 				hkvsipcam = 1;
 			else if (strcmp(p, "App-webs/") == 0)
 				hkvsipcam = 1;
 			else if (strcmp(p, "mini_httpd/1.19 19dec2003") == 0)
 				dlink = 1;
-			else if (strcmp(p, "MicrosoftHTTPAPI/2.00") == 0)
+			else if (strcmp(p, "MicrosoftHTTPAPI/2.0") == 0)
 				mssql = 1;
-			else if (strcmp(p, "MbedthisAppweb/2.4.22") == 0)
+			else if (strcmp(p, "Mbedthis-Appweb/2.4.2") == 0)
 				lenovo = 1;
 			else if (strcmp(p, "http server 1.0") == 0)
 				qnap = 1;
-			else if (strcmp(p, "GoAhead-Webss") == 0)
+			else if (strcmp(p, "GoAhead-Webs") == 0)
 				ipmi = 1;
 			else if (strcmp(p, "GoAhead-Webs/2.5.0") == 0)
 				pdyq = 1;
