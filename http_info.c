@@ -118,9 +118,9 @@ void http_info(char *url)
 			addstr(server, p);
 			if (strstr(p, "Virata-EmWeb") != 0)
 				hpprinter = 1;
-			else if (strcmp(p, "MrvIR1_00") == 0)
+			else if (strcmp(p, "MrvlR1_00") == 0)
 				hpprinter = 1;
-			else if (strcmp(p, "MrvI-2_00") == 0)
+			else if (strcmp(p, "Mrvl-R2_0") == 0)
 				hpprinter = 1;
 			else if (strcmp(p, "HP_Compact_Server") == 0)
 				hpprinter = 1;
