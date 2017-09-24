@@ -1,4 +1,4 @@
-#http_info 显示HTTP协议的服务器端信息
+## http_info 显示HTTP协议的服务器端信息
 
 ````
 usage:
@@ -10,13 +10,13 @@ usage:
           -i url_file     read url from url_file
 ````
 
-##例子输出
+## 例子输出
 ````
 ./http_info http://202.38.64.8
 "http://202.38.64.8" "Apache-Coyote/1.1" "" "java"
 ````
 
-##我的使用
+## 我的使用
 * 为避免扫描对核心交换机的冲击，预先生成近10分钟在线的IP，文件为 ustcip.txt
 * 使用masscan得到开放80,8080,443端口的IP，文件为web.txt
 ````
