@@ -66,7 +66,7 @@ void http_info_output(char *url, char *server, char *soft, char *tag)
 	checkstring(server);
 	checkstring(soft);
 	checkstring(tag);
-	printf("replace into %s (url,server,soft,tag) values(\"%s\",\"%s\",\"%s\",\"%s\");\n", sql_table_name, url, server, soft, tag);
+	printf("replace into %s (url,server,soft,tag,lastcheck) values(\"%s\",\"%s\",\"%s\",\"%s\",now());\n", sql_table_name, url, server, soft, tag);
 	fflush(NULL);
 }
 

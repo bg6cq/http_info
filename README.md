@@ -10,6 +10,19 @@ usage:
           -i url_file     read url from url_file
 ````
 
+## 输出可以直接插入数据库
+   数据库表结构
+````
+CREATE TABLE `http_info` (
+  `url` varchar(255) NOT NULL,
+  `server` varchar(255) NOT NULL DEFAULT '',
+  `soft` varchar(255) NOT NULL DEFAULT '',
+  `tag` varchar(255) NOT NULL DEFAULT '',
+  `lastcheck` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`url`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+````
+
 ## 例子输出
 ````
 ./http_info http://202.38.64.8
@@ -24,15 +37,15 @@ masscan -p 80,8080,443 -iL ustcip.txt --wait 2 --max-rate 2000 -oL web.txt --exc
 ````
 *  使用http_info获取服务器信息
 ````
-debug="-d"
+opt="-d"
 grep "open tcp" web.txt |while read a b port ip; do
 	echo $ip $port
 	if [ $port == 443 ]; then
-        	./http_info $debug https://$ip
+        	./http_info $opt https://$ip
 	elif [ $port == 80 ]; then
-        	./http_info $debug http://$ip
+        	./http_info $opt http://$ip
 	else
-        	./http_info $debug http://$ip:$port
+        	./http_info $opt http://$ip:$port
 	fi
 done
 ````
