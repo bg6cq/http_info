@@ -27,6 +27,11 @@ CREATE TABLE `http_info` (
 ````
 ./http_info http://202.38.64.8
 "http://202.38.64.8" "Apache-Coyote/1.1" "" "java"
+./http_info https://114.214.166.119
+"https://114.214.166.119" "Apache/2.2.15 (CentOS)" "PHP/5.3.3" "php"
+./http_info -s https://114.214.166.119
+replace into http_info (url,server,soft,tag,lastcheck) values("https://114.214.166.119","Apache/2.2.15 (CentOS)","PHP/5.3.3","php",now());
+
 ````
 
 ## 我的使用
