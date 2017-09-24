@@ -19,7 +19,8 @@ char sql_table_name[MAXLEN];
 char server[MAXLEN];
 char soft[MAXLEN];
 
-int php, asp, java, hpprinter;
+int php, asp, java, hpprinter, h3c, lenovo;
+int netgear, zhonshipcam, hkvsipcam, dlink, mssql, qnap, ipmi, pdyq, labview;
 
 void addstr(char *buf, char *str)
 {
@@ -41,6 +42,7 @@ void checkstring(char *buf)
 		    (buf[b] >= '0' && buf[b] <= '9') ||
 		    (buf[b] == '.') ||
 		    (buf[b] == '_') ||
+		    (buf[b] == '-') ||
 		    (buf[b] == '/') ||
 		    (buf[b] == '(') ||
 		    (buf[b] == ')') || (buf[b] == '<') || (buf[b] == '>') || (buf[b] == ' ') || (buf[b] == ':') || (buf[b] == ',') || (buf[b] == ';')) {
@@ -50,9 +52,9 @@ void checkstring(char *buf)
 			if (debug)
 				printf("DBG: skip char %c\n", buf[b]);
 		}
-
 		b++;
 	}
+	buf[a] = 0;
 }
 
 void http_info_output(char *url, char *server, char *soft, char *tag)
@@ -79,7 +81,8 @@ void http_info(char *url)
 	int got_res = 0;
 	server[0] = 0;
 	soft[0] = 0;
-	php = asp = java = hpprinter = 0;
+	php = asp = java = hpprinter = h3c = lenovo = 0;
+	netgear = zhonshipcam = hkvsipcam = dlink = mssql = qnap = ipmi = pdyq = labview = 0;
 	snprintf(buf, MAXLEN, "curl -k --head -m %d %s 2>/dev/null", wait_time, url);
 	fp = popen(buf, "r");
 	if (fp == NULL) {
@@ -111,8 +114,45 @@ void http_info(char *url)
 			addstr(server, p);
 			if (strstr(p, "Virata-EmWeb") != 0)
 				hpprinter = 1;
-			if (strstr(p, "Coyote") != 0)
+			else if (strcmp(p, "MrvIR1_00") == 0)
+				hpprinter = 1;
+			else if (strcmp(p, "MrvI-2_00") == 0)
+				hpprinter = 1;
+			else if (strcmp(p, "HP_Compact_Server") == 0)
+				hpprinter = 1;
+			else if (memcmp(p, "HP HTTP Server;", 15) == 0)
+				hpprinter = 1;
+			else if (strstr(p, "Coyote") != 0)
 				java = 1;
+			else if (strcmp(p, "WMI V5") == 0)
+				h3c = 1;
+			else if (strcmp(p, "Switch") == 0)
+				h3c = 1;
+			else if (strcmp(p, "uhttpd/1.0.0") == 0) {
+				if (memcmp(url, "https://", 8) == 0)
+					netgear = 1;
+			} else if (strcmp(p, "thttpd/2.27 19Oct2015") == 0)
+				zhonshipcam = 1;
+			else if (strcmp(p, "Hikvision-Webss") == 0)
+				hkvsipcam = 1;
+			else if (strcmp(p, "DNVRS-Webss") == 0)
+				hkvsipcam = 1;
+			else if (strcmp(p, "App-webs/") == 0)
+				hkvsipcam = 1;
+			else if (strcmp(p, "mini_httpd/1.19 19dec2003") == 0)
+				dlink = 1;
+			else if (strcmp(p, "MicrosoftHTTPAPI/2.00") == 0)
+				mssql = 1;
+			else if (strcmp(p, "MbedthisAppweb/2.4.22") == 0)
+				lenovo = 1;
+			else if (strcmp(p, "http server 1.0") == 0)
+				qnap = 1;
+			else if (strcmp(p, "GoAhead-Webss") == 0)
+				ipmi = 1;
+			else if (strcmp(p, "GoAhead-Webs/2.5.0") == 0)
+				pdyq = 1;
+			else if (strcmp(p, "Embedthis-http") == 0)
+				labview = 1;
 		}
 		if (memcmp(buf, "Set-Cookie: ", 12) == 0) {
 			p = buf + 12;
@@ -151,6 +191,28 @@ void http_info(char *url)
 		addstr(buf, "java");
 	if (hpprinter == 1)
 		addstr(buf, "hpprinter");
+	if (h3c == 1)
+		addstr(buf, "h3c");
+	if (lenovo == 1)
+		addstr(buf, "lenovo");
+	if (netgear == 1)
+		addstr(buf, "netgeare");
+	if (zhonshipcam == 1)
+		addstr(buf, "zhonshipcam");
+	if (hkvsipcam == 1)
+		addstr(buf, "hkvsipcam");
+	if (dlink == 1)
+		addstr(buf, "dlink");
+	if (mssql == 1)
+		addstr(buf, "mssql");
+	if (qnap == 1)
+		addstr(buf, "qnap");
+	if (ipmi == 1)
+		addstr(buf, "ipmi");
+	if (pdyq == 1)
+		addstr(buf, "pdyq");
+	if (labview == 1)
+		addstr(buf, "labview");
 	http_info_output(url, server, soft, buf);
 }
 
