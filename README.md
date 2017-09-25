@@ -9,7 +9,10 @@ usage:
           -t table_name   sql replace table_name
           -i url_file     read url from url_file
 ````
-http_info 执行 curl 去获取网站的HTTP 头信息，因此需要安装curl才可以正常使用。
+http_info 执行需要以下3个程序：
+1. curl     去获取网站的HTTP 头信息
+2. timeout 
+3. openssl  获取网站的证书信息
 
 ## 输出可以直接插入数据库
    数据库表结构

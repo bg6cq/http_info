@@ -21,6 +21,7 @@ char soft[MAXLEN];
 
 int php, asp, java, hpprinter, h3c, lenovo;
 int netgear, zhonshipcam, hkvsipcam, dlink, mssql, qnap, ipmi, pdyq, labview;
+int vmware;
 
 void addstr(char *buf, char *str)
 {
@@ -84,7 +85,7 @@ void http_info(char *url)
 	server[0] = 0;
 	soft[0] = 0;
 	php = asp = java = hpprinter = h3c = lenovo = 0;
-	netgear = zhonshipcam = hkvsipcam = dlink = mssql = qnap = ipmi = pdyq = labview = 0;
+	netgear = zhonshipcam = hkvsipcam = dlink = mssql = qnap = ipmi = pdyq = labview = vmware = 0;
 	if (debug)
 		printf("DBG: url=%s\n", url);
 	snprintf(buf, MAXLEN, "curl -k --head -m %d %s 2>/dev/null", wait_time, url);
@@ -187,6 +188,36 @@ void http_info(char *url)
 		http_info_output(url, buf, "", "");
 		return;
 	}
+
+	if ((server[0] == 0) && (soft[0] == 0) && (memcmp(url, "https://", 8) == 0)) {	// https, nothing got, try get ca information
+		FILE *pfp;
+		char sslurl[MAXLEN];
+		snprintf(sslurl, MAXLEN, "%s", url + 8);
+		p = sslurl;
+		while (*p && (*p != '/'))
+			p++;
+		*p = 0;
+
+		if (strchr(sslurl, ':'))
+			snprintf(buf, MAXLEN, "timeout 1 openssl s_client -connect %s < /dev/null 2>&1", sslurl);
+		else
+			snprintf(buf, MAXLEN, "timeout 1 openssl s_client -connect %s:443 < /dev/null 2>&1", sslurl);
+		if (debug)
+			printf("DBG: try %s\n", buf);
+		pfp = popen(buf, "r");
+		if (pfp && fgets(buf, MAXLEN, pfp)) {	// get first line
+			if (strstr(buf, "@vmware.com"))
+				vmware = 1;
+			else if (strstr(buf, "@ami.com"))
+				ipmi = 1;
+			else if (strstr(buf, "IPMI"))
+				ipmi = 1;
+			else if (debug)
+				printf("DBG: unknow ca %s", buf);
+			pclose(pfp);
+		}
+	}
+
 	buf[0] = 0;
 	if (php == 1)
 		addstr(buf, "php");
@@ -218,6 +249,8 @@ void http_info(char *url)
 		addstr(buf, "pdyq");
 	if (labview == 1)
 		addstr(buf, "labview");
+	if (vmware == 1)
+		addstr(buf, "vmware");
 	http_info_output(url, server, soft, buf);
 }
 
