@@ -208,6 +208,8 @@ void http_info(char *url)
 		if (pfp && fgets(buf, MAXLEN, pfp)) {	// get first line
 			if (strstr(buf, "@vmware.com"))
 				vmware = 1;
+			else if (strstr(buf, "VMware"))
+				vmware = 1;
 			else if (strstr(buf, "@ami.com"))
 				ipmi = 1;
 			else if (strstr(buf, "IPMI"))
