@@ -145,7 +145,7 @@ void http_info(char *url)
 				hkvsipcam = 1;
 			else if (strcmp(p, "mini_httpd/1.19 19dec2003") == 0)
 				dlink = 1;
-			else if (strcmp(p, "MicrosoftHTTPAPI/2.0") == 0)
+			else if (strcmp(p, "Microsoft-HTTPAPI/2.0") == 0)
 				mssql = 1;
 			else if (strcmp(p, "Mbedthis-Appweb/2.4.2") == 0)
 				lenovo = 1;
