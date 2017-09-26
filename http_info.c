@@ -13,7 +13,7 @@
 
 int debug;
 char url_file[MAXLEN];
-int wait_time = 1;
+int wait_time = 2;
 int output_sql = 0;
 char sql_table_name[MAXLEN];
 char server[MAXLEN];
@@ -212,8 +212,14 @@ void http_info(char *url)
 				vmware = 1;
 			else if (strstr(buf, "@ami.com"))
 				ipmi = 1;
+			else if (strstr(buf, "Super Micro Computer"))
+				ipmi = 1;
 			else if (strstr(buf, "IPMI"))
 				ipmi = 1;
+			else if (strstr(buf, "iDRAC"))
+				ipmi = 1;
+			else if (strstr(buf, "HP Jetdirect"))
+				hpprinter = 1;
 			else if (debug)
 				printf("DBG: unknow ca %s", buf);
 			pclose(pfp);
