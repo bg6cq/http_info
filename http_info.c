@@ -15,6 +15,7 @@ int debug;
 char url_file[MAXLEN];
 int wait_time = 2;
 int output_sql = 0;
+int no_jboss = 0;
 char sql_table_name[MAXLEN];
 char server[MAXLEN];
 char soft[MAXLEN];
@@ -261,6 +262,9 @@ void http_info(char *url)
 		addstr(buf, "vmware");
 	http_info_output(url, server, soft, buf);
 
+	if (no_jboss)
+		return;
+
 	// check jboss 
 	snprintf(buf, MAXLEN, "curl -k --head -m %d %s/invoker/JMXInvokerServlet 2>/dev/null", wait_time, url);
 	fp = popen(buf, "r");
@@ -321,8 +325,9 @@ void usage(void)
 {
 	fprintf(stderr, "%s\n",
 		"usage: \n"
-		"    http_info [ -d ] [ -w wait_time ] [ -s -t table_name ] [ -i url_file | url ]\n"
+		"    http_info [ -d ] [ -j ] [ -w wait_time ] [ -s -t table_name ] [ -i url_file | url ]\n"
 		"          -d              debug\n"
+		"          -j              do not check jboss bug\n"
 		"          -w wait_time    wait_time when do curl\n"
 		"          -s              ouput sql replace into statement\n"
 		"          -t table_name   sql replace table_name\n" "          -i url_file     read url from url_file\n");
@@ -331,10 +336,13 @@ void usage(void)
 int main(int argc, char *argv[])
 {
 	int c;
-	while ((c = getopt(argc, argv, "dw:i:st:")) != EOF)
+	while ((c = getopt(argc, argv, "djw:i:st:")) != EOF)
 		switch (c) {
 		case 'd':
 			debug = 1;
+			break;
+		case 'j':
+			no_jboss = 1;
 			break;
 		case 'w':
 			wait_time = atoi(optarg);
