@@ -260,6 +260,27 @@ void http_info(char *url)
 	if (vmware == 1)
 		addstr(buf, "vmware");
 	http_info_output(url, server, soft, buf);
+
+	// check jboss 
+	snprintf(buf, MAXLEN, "curl -k --head -m %d %s/invoker/JMXInvokerServlet 2>/dev/null", wait_time, url);
+	fp = popen(buf, "r");
+	if (fp == NULL) {
+		fprintf(stderr, "popen %s error\n", buf);
+		return;
+	}
+	if (fgets(buf, MAXLEN, fp) == NULL) {
+		pclose(fp);
+		return;
+	}
+	if (strstr(buf, " 200 OK") == 0) {
+		pclose(fp);
+		return;
+	}
+	pclose(fp);
+	snprintf(buf, MAXLEN, "%s/invoker/JMXInvokerServlet", url);
+	strcpy(server, "JBOSS BUG");
+	strcpy(soft, "JBOSS BUG");
+	http_info_output(buf, server, soft, "");
 }
 
 void http_info_url_file(char *url_file)
