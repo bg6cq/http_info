@@ -276,11 +276,17 @@ void http_info(char *url)
 		pclose(fp);
 		return;
 	}
+	while (fgets(buf, MAXLEN, fp)) {
+		if (strstr(buf, "serialized")) {
+			pclose(fp);
+			snprintf(buf, MAXLEN, "%s/invoker/JMXInvokerServlet", url);
+			strcpy(server, "JBOSS BUG");
+			strcpy(soft, "JBOSS BUG");
+			http_info_output(buf, server, soft, "");
+			return;
+		}
+	}
 	pclose(fp);
-	snprintf(buf, MAXLEN, "%s/invoker/JMXInvokerServlet", url);
-	strcpy(server, "JBOSS BUG");
-	strcpy(soft, "JBOSS BUG");
-	http_info_output(buf, server, soft, "");
 }
 
 void http_info_url_file(char *url_file)
