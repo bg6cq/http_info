@@ -15,7 +15,7 @@ int debug;
 char url_file[MAXLEN];
 int wait_time = 2;
 int output_sql = 0;
-int no_jboss = 0;
+int check_jboss = 0;
 char sql_table_name[MAXLEN];
 char server[MAXLEN];
 char soft[MAXLEN];
@@ -262,10 +262,12 @@ void http_info(char *url)
 		addstr(buf, "vmware");
 	http_info_output(url, server, soft, buf);
 
-	if (no_jboss)
+	if ((java == 0) && (check_jboss == 0))
 		return;
 
 	// check jboss 
+	if (debug)
+		printf("DBG: checking JBOSS\n");
 	snprintf(buf, MAXLEN, "curl -k --head -m %d %s/invoker/JMXInvokerServlet 2>/dev/null", wait_time, url);
 	fp = popen(buf, "r");
 	if (fp == NULL) {
@@ -276,11 +278,15 @@ void http_info(char *url)
 		pclose(fp);
 		return;
 	}
+	if (debug)
+		printf("DBG: %s\n", buf);
 	if (strstr(buf, " 200 OK") == 0) {
 		pclose(fp);
 		return;
 	}
 	while (fgets(buf, MAXLEN, fp)) {
+		if (debug)
+			printf("DBG: %s\n", buf);
 		if (strstr(buf, "serialized")) {
 			pclose(fp);
 			snprintf(buf, MAXLEN, "%s/invoker/JMXInvokerServlet", url);
@@ -327,7 +333,7 @@ void usage(void)
 		"usage: \n"
 		"    http_info [ -d ] [ -j ] [ -w wait_time ] [ -s -t table_name ] [ -i url_file | url ]\n"
 		"          -d              debug\n"
-		"          -j              do not check jboss bug\n"
+		"          -j              force check jboss bug\n"
 		"          -w wait_time    wait_time when do curl\n"
 		"          -s              ouput sql replace into statement\n"
 		"          -t table_name   sql replace table_name\n" "          -i url_file     read url from url_file\n");
@@ -342,7 +348,7 @@ int main(int argc, char *argv[])
 			debug = 1;
 			break;
 		case 'j':
-			no_jboss = 1;
+			check_jboss = 1;
 			break;
 		case 'w':
 			wait_time = atoi(optarg);
