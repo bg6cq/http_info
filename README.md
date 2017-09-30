@@ -19,6 +19,7 @@ http_info 执行需要以下3个程序：
 ````
 CREATE TABLE `http_info` (
   `url` varchar(255) NOT NULL,
+  `ip` varchar(50) NOT NULL DEFAULT '',
   `prot` enum('tcp','udp','all') DEFAULT 'tcp',
   `port` int(5) DEFAULT '0',
   `server` varchar(255) NOT NULL DEFAULT '',
