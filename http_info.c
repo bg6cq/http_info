@@ -63,8 +63,25 @@ void checkstring(char *buf)
 
 void http_info_output(char *url, char *server, char *soft, char *tag)
 {
+	char IP[MAXLEN];
+	char *port;
+	if (memcmp(url, "http://", 7) == 0) {
+		strcpy(IP, url + 7);
+		port = "80";
+	} else if (memcmp(url, "https://", 8) == 0) {
+		strcpy(IP, url + 8);
+		port = "443";
+	} else {
+		fprintf(stderr, "unknow url %s\n", url);
+		return;
+	}
+	char *p = strchr(IP, ':');
+	if (p) {
+		*p = 0;
+		port = p + 1;
+	}
 	if (output_sql == 0) {
-		printf("\"%s\" \"%s\" \"%s\" \"%s\"\n", url, server, soft, tag);
+		printf("\"%s\" \"%s\" \"%s\" \"%s\" \"%s\" \"%s\"\n", url, IP, port, server, soft, tag);
 		fflush(NULL);
 		return;
 	}
@@ -72,7 +89,8 @@ void http_info_output(char *url, char *server, char *soft, char *tag)
 	checkstring(server);
 	checkstring(soft);
 	checkstring(tag);
-	printf("replace into %s (url,server,soft,tag,lastcheck) values(\"%s\",\"%s\",\"%s\",\"%s\",now());\n", sql_table_name, url, server, soft, tag);
+	printf("replace into %s (url,ip,prot,port,server,soft,tag,lastcheck) values(\"%s\",\"%s\", \"tcp\", \"%s\", \"%s\",\"%s\",\"%s\",now());\n",
+	       sql_table_name, url, IP, port, server, soft, tag);
 	fflush(NULL);
 }
 
@@ -89,6 +107,10 @@ void http_info(char *url)
 	netgear = zhonshipcam = hkvsipcam = dlink = mssql = qnap = ipmi = pdyq = labview = vmware = 0;
 	if (debug)
 		printf("DBG: url=%s\n", url);
+	if ((memcmp(url, "http://", 7) != 0) && (memcmp(url, "https://", 8) != 0)) {
+		fprintf(stderr, "url must begin with https:// or http://\n");
+		return;
+	}
 	snprintf(buf, MAXLEN, "curl -k --head -m %d %s 2>/dev/null", wait_time, url);
 	fp = popen(buf, "r");
 	if (fp == NULL) {
