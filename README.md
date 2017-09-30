@@ -19,6 +19,8 @@ http_info 执行需要以下3个程序：
 ````
 CREATE TABLE `http_info` (
   `url` varchar(255) NOT NULL,
+  `prot` enum('tcp','udp','all') DEFAULT 'tcp',
+  `port` int(5) DEFAULT '0',
   `server` varchar(255) NOT NULL DEFAULT '',
   `soft` varchar(255) NOT NULL DEFAULT '',
   `tag` varchar(255) NOT NULL DEFAULT '',
@@ -29,13 +31,10 @@ CREATE TABLE `http_info` (
 
 ## 例子输出
 ````
-./http_info http://202.38.64.8
-"http://202.38.64.8" "Apache-Coyote/1.1" "" "java"
-./http_info https://114.214.166.119
-"https://114.214.166.119" "Apache/2.2.15 (CentOS)" "PHP/5.3.3" "php"
-./http_info -s https://114.214.166.119
-replace into http_info (url,server,soft,tag,lastcheck) values("https://114.214.166.119","Apache/2.2.15 (CentOS)","PHP/5.3.3","php",now());
-
+./http_info http://mail.ustc.edu.cn
+"http://mail.ustc.edu.cn" "mail.ustc.edu.cn" "80" "Apache-Coyote/1.1" "" "java"
+./http_info -s http://mail.ustc.edu.cn
+replace into http_info (url,ip,prot,port,server,soft,tag,lastcheck) values("http://mail.ustc.edu.cn","mail.ustc.edu.cn", "tcp", "80", "Apache-Coyote/1.1","","java",now());
 ````
 
 ## 我的使用
@@ -58,5 +57,3 @@ grep "open tcp" web.txt |while read a b port ip; do
 	fi
 done
 ````
-
-
